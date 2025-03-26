@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 // Components
@@ -12,7 +12,8 @@ import WhyChooseUs from '../components/contact/WhyChooseUs';
 import OpeningHours from '../components/contact/OpeningHours';
 import RouteBeschrijving from '../components/contact/RouteBeschrijving';
 
-const ContactPage = () => {
+// Maak een wrapper component die useSearchParams gebruikt
+const ContactPageContent = () => {
   const searchParams = useSearchParams();
   const [activeSection, setActiveSection] = useState('contact');
   const gradientRef = useRef<HTMLDivElement>(null);
@@ -95,6 +96,22 @@ const ContactPage = () => {
         </div>
       </div>
     </main>
+  );
+};
+
+// Hoofdcomponent met Suspense boundary
+const ContactPage = () => {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-blue-600 text-lg">Laden...</p>
+        </div>
+      </div>
+    }>
+      <ContactPageContent />
+    </Suspense>
   );
 };
 
